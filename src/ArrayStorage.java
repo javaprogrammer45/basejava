@@ -5,9 +5,10 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size;
 
     void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, size, null);
     }
 
     void save(Resume r) {
@@ -21,32 +22,27 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         for (Resume resume : storage) {
-            if (resume.uuid.equals(uuid)) {
-                return resume;
-            }
-            if (uuid.equals("dummy")) {
-                resume.uuid = "dummy";
-                return resume;
+            if (resume != null) {
+                if (resume.uuid.equals(uuid)) {
+                    return resume;
+                }
+            } else {
+                break;
             }
         }
         return null;
     }
 
     void delete(String uuid) {
-        int counter = 0;
         for (int i = 0; i < storage.length; i++) {
-            try {
-                if (storage[i] != null) {
-                    counter++;
-                }
-                if (storage[i].uuid.equals(uuid) && storage[i] != null) {
+            if (storage[i] != null) {
+                if (storage[i].uuid.equals(uuid)) {
                     System.arraycopy(storage, i + 1, storage, i, storage.length - 1);
-                    storage[counter] = null;
+                    storage[size - 1] = null;
                 }
-            } catch (NullPointerException e) {
-                return;
+            } else {
+                break;
             }
-
         }
     }
 
@@ -64,6 +60,7 @@ public class ArrayStorage {
     }
 
     int size() {
-        return getAll().length;
+        size = getAll().length;
+        return size;
     }
 }
