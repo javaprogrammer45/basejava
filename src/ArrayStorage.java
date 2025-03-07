@@ -15,6 +15,7 @@ public class ArrayStorage {
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                size++;
                 break;
             }
         }
@@ -50,7 +51,7 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int counter = 0;
+        int counter=0;
         for (Resume resume : storage) {
             if (resume != null) {
                 counter++;
@@ -60,7 +61,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        size = getAll().length;
         return size;
     }
 }
