@@ -1,3 +1,7 @@
+package com.basejava.storage;
+
+import com.basejava.model.Resume;
+
 /**
  * Test for your ArrayStorage implementation
  */

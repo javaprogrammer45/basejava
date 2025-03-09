@@ -1,3 +1,7 @@
+package com.basejava.storage;
+
+import com.basejava.model.Resume;
+
 import java.util.Arrays;
 
 /**
@@ -11,12 +15,15 @@ public class ArrayStorage {
         Arrays.fill(storage, 0, size, null);
     }
 
-    void save(Resume r) {
-        storage[size++] = r;
+    void update(Resume resume) {
+        for (int i = 0; i < size; i++) {
+            if (storage[i].equals(resume)) {
+                storage[i] = resume;
+            }
+        }
     }
 
-
-    Resume get(String uuid) {
+    Resume isExists(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
@@ -25,9 +32,29 @@ public class ArrayStorage {
         return null;
     }
 
+    void save(Resume r) {
+        if (size == storage.length) {
+            System.out.println("Storage is full");
+            return;
+        }
+        if (isExists(r.uuid) == null) {
+            storage[size++] = r;
+        } else {
+            update(r);
+        }
+    }
+
+
+    Resume get(String uuid) {
+        if (isExists(uuid) != null) {
+            return isExists(uuid);
+        }
+        return null;
+    }
+
     void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid.equals(uuid)) {
+            if (isExists(uuid).uuid.equals(uuid)) {
                 System.arraycopy(storage, i + 1, storage, i, size - i - 1);
                 storage[size - 1] = null;
                 size--;
