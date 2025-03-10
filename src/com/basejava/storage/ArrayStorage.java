@@ -8,36 +8,39 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int size;
+    private final static int STORAGE_LIMIT = 10000;
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size;
 
-    void clear() {
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
     }
 
-    void update(Resume resume) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].equals(resume)) {
-                storage[i] = resume;
-            }
+    public void update(Resume resume) {
+        if (isExisting(findSearchKey(resume.uuid))) {
+            storage[findSearchKey(resume.uuid)] = resume;
         }
     }
 
-    Resume isExists(String uuid) {
+    protected int findSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                return storage[i];
+                return i;
             }
         }
-        return null;
+        return -1;
     }
 
-    void save(Resume r) {
+    protected boolean isExisting(int index) {
+        return index >= 0 && index < size;
+    }
+
+    public void save(Resume r) {
         if (size == storage.length) {
             System.out.println("Storage is full");
             return;
         }
-        if (isExists(r.uuid) == null) {
+        if (!isExisting(findSearchKey(r.uuid))) {
             storage[size++] = r;
         } else {
             update(r);
@@ -45,21 +48,19 @@ public class ArrayStorage {
     }
 
 
-    Resume get(String uuid) {
-        if (isExists(uuid) != null) {
-            return isExists(uuid);
+    public Resume get(String uuid) {
+        if (isExisting(findSearchKey(uuid))) {
+            return storage[findSearchKey(uuid)];
         }
         return null;
     }
 
-    void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (isExists(uuid).uuid.equals(uuid)) {
-                System.arraycopy(storage, i + 1, storage, i, size - i - 1);
-                storage[size - 1] = null;
-                size--;
-                break;
-            }
+    public void delete(String uuid) {
+        if (isExisting(findSearchKey(uuid))) {
+            System.arraycopy(storage, findSearchKey(uuid) + 1, storage, findSearchKey(uuid),
+                    size - findSearchKey(uuid) - 1);
+            storage[size - 1] = null;
+            size--;
         }
     }
 
@@ -70,7 +71,7 @@ public class ArrayStorage {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 }
