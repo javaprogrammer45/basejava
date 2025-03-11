@@ -12,13 +12,15 @@ public class ArrayStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size;
 
+
     public void clear() {
         Arrays.fill(storage, 0, size, null);
     }
 
     public void update(Resume resume) {
-        if (isExisting(findSearchKey(resume.uuid))) {
-            storage[findSearchKey(resume.uuid)] = resume;
+        int index = findSearchKey(resume.uuid);
+        if (isExisting(index)) {
+            storage[index] = resume;
         }
     }
 
@@ -40,25 +42,22 @@ public class ArrayStorage {
             System.out.println("Storage is full");
             return;
         }
-        if (!isExisting(findSearchKey(r.uuid))) {
-            storage[size++] = r;
-        } else {
-            update(r);
-        }
+        storage[size++] = r;
     }
 
 
     public Resume get(String uuid) {
-        if (isExisting(findSearchKey(uuid))) {
-            return storage[findSearchKey(uuid)];
+        int index = findSearchKey(uuid);
+        if (isExisting(index)) {
+            return storage[index];
         }
         return null;
     }
 
     public void delete(String uuid) {
-        if (isExisting(findSearchKey(uuid))) {
-            System.arraycopy(storage, findSearchKey(uuid) + 1, storage, findSearchKey(uuid),
-                    size - findSearchKey(uuid) - 1);
+        int index = findSearchKey(uuid);
+        if (isExisting(index)) {
+            storage[index] = storage[size - 1];
             storage[size - 1] = null;
             size--;
         }
@@ -67,7 +66,7 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
