@@ -28,7 +28,19 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public Resume get(String uuid) {
+    public final void save(Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index >= 0) {
+            System.out.println("Resume " + r.getUuid() + " already exist");
+        } else if (size >= STORAGE_LIMIT) {
+            System.out.println("Storage overflow");
+        } else {
+            add(r, index);
+            size++;
+        }
+    }
+
+    public final Resume get(String uuid) {
         int index = getIndex(uuid);
         if (index < 0) {
             System.out.println("Resume " + uuid + " not exist");
@@ -37,13 +49,28 @@ public abstract class AbstractArrayStorage implements Storage {
         return storage[index];
     }
 
-    public Resume[] getAll() {
+    public final void delete(String uuid) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            System.out.println("Resume " + uuid + " not exist");
+        } else {
+            insertRemoved(index);
+            storage[size - 1] = null;
+            size--;
+        }
+    }
+
+    public final Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
     public int size() {
         return size;
     }
+
+    protected abstract void insertRemoved(int index);
+
+    protected abstract void add(Resume r, int index);
 
     protected abstract int getIndex(String uuid);
 }
