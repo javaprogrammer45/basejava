@@ -1,6 +1,7 @@
-package com.basejava.storage;
+package com.basejava;
 
 import com.basejava.model.Resume;
+import com.basejava.storage.ArrayStorage;
 
 /**
  * Test ArrayStorage
@@ -10,11 +11,8 @@ public class MainTestArrayStorage {
 
     public static void main(String[] args) {
         Resume r1 = new Resume();
-        r1.setUuid("uuid1");
         Resume r2 = new Resume();
-        r2.setUuid("uuid2");
         Resume r3 = new Resume();
-        r3.setUuid("uuid3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
