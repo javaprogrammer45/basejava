@@ -1,6 +1,6 @@
 import com.basejava.storage.ArrayStorage;
 
-public class ArrayStorageTest extends AbstractArrayStorageTest{
+class ArrayStorageTest extends AbstractStorageTest{
     public ArrayStorageTest() {
         super(new ArrayStorage());
     }
