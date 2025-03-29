@@ -1,4 +1,5 @@
 package com.basejava.storage;
 
-//public class MapStorage extends AbstractStorage {
-//}
+public class MapStorage extends AbstractStorage {
+
+}

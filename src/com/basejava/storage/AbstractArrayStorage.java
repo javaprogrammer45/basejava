@@ -14,13 +14,17 @@ public abstract class  AbstractArrayStorage extends AbstractStorage {
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    public void deleteElements() {
+    public int size() {
+        return size;
+    }
+
+    public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public void updateElement(Resume r) {
-        int index = getIndex(r.getUuid());
+    public void doUpdate(Resume r) {
+        int index = (int) getSearchKey(r.getUuid());
         if (index < 0) {
             System.out.println("Resume " + r.getUuid() + " not exist");
         } else {
@@ -28,8 +32,8 @@ public abstract class  AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public void saveResume(Resume r) {
-        int index = getIndex(r.getUuid());
+    public void doSave(Resume r) {
+        int index = (int) getSearchKey(r.getUuid());
         if (index >= 0) {
             System.out.println("Resume " + r.getUuid() + " already exist");
         } else if (size >= STORAGE_LIMIT) {
@@ -40,26 +44,28 @@ public abstract class  AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public Resume getResume(String uuid) {
-        return storage[getIndex(uuid)];
+    public Resume doGet(String uuid) {
+        return storage[(int) getSearchKey(uuid)];
     }
 
-    public void removeResume(String uuid) {
-        fillRemoved(getIndex(uuid));
+
+    public void doDelete(Object index) {
+        fillRemoved((Integer) index);
         storage[size - 1] = null;
         size--;
+    }
+
+    protected boolean isExist(Integer key) {
+        return (Integer) key >= 0;
     }
 
     public Resume[] getAllResumes() {
         return Arrays.copyOfRange(storage, 0, size);
     }
 
-    public int sizeStorage() {
-        return size;
-    }
-
     protected abstract void fillRemoved(int index);
 
     protected abstract void insertResume(Resume r, int index);
 
+    protected abstract Integer getSearchKey(String uuid);
 }

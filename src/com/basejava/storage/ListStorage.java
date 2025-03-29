@@ -6,11 +6,11 @@ import java.util.ListIterator;
 
 public class ListStorage extends AbstractStorage {
 
-    public void deleteElements() {
+    public void doDelete() {
         resumes.clear();
     }
 
-    public void updateElement(Resume r) {
+    public void doUpdate(Resume r) {
         int index;
         int result;
         ListIterator<Resume> listIterator = resumes.listIterator();
@@ -25,7 +25,7 @@ public class ListStorage extends AbstractStorage {
         }
     }
 
-    public void saveResume(Resume r) {
+    public void doSave(Resume r) {
         if (!resumes.contains(r)) {
             resumes.add(r);
         } else {
@@ -33,30 +33,40 @@ public class ListStorage extends AbstractStorage {
         }
     }
 
-    public Resume getResume(String uuid) {
-        return resumes.get(getIndex(uuid));
+    public Resume doGet(String uuid) {
+        return resumes.get(getSearchKey(uuid));
     }
 
-    public int getIndex(String uuid) {
+    public Integer getSearchKey(String uuid) {
         for (Resume r : resumes) {
             int result = r.getUuid().compareTo(uuid);
             if (result == 0) {
                 return resumes.indexOf(r);
             }
         }
-        return -1;
+        return null;
     }
 
-    public void removeResume(String uuid) {
-        int index = getIndex(uuid);
+    protected boolean isExist(Object searchKey) {
+        return searchKey != null;
+    }
+
+    public void do(String uuid) {
+        int index = getSearchKey(uuid);
         resumes.remove(index);
     }
 
-    public Resume[] getAllResumes() {
-        return resumes.subList(0, resumes.size()).toArray(new Resume[0]);
+    public void clear() {
+        resumes.clear();
     }
 
-    public int sizeStorage() {
+    @Override
+    public Resume[] getAll() {
+        return resumes.toArray(new Resume[resumes.size()]);
+    }
+
+    @Override
+    public int size() {
         return resumes.size();
     }
 }
