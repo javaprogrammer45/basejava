@@ -1,61 +1,47 @@
 package com.basejava.storage;
 
 import com.basejava.model.Resume;
-
-import java.util.ListIterator;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ListStorage extends AbstractStorage {
+    List<Resume> resumes = new ArrayList<>();
 
-    public void doDelete() {
-        resumes.clear();
-    }
-
-    public void doUpdate(Resume r) {
-        int index;
-        int result;
-        ListIterator<Resume> listIterator = resumes.listIterator();
-        while (listIterator.hasNext()) {
-            result = r.getUuid().compareTo(listIterator.next().getUuid());
-            if (result == 0) {
-                index = listIterator.nextIndex();
-                resumes.add(index, r);
-            } else {
-                System.out.println("Resume " + r.getUuid() + " not exist");
-            }
-        }
-    }
-
-    public void doSave(Resume r) {
-        if (!resumes.contains(r)) {
-            resumes.add(r);
-        } else {
-            System.out.println("Resume " + r.getUuid() + " already exist");
-        }
-    }
-
-    public Resume doGet(String uuid) {
-        return resumes.get(getSearchKey(uuid));
-    }
-
-    public Integer getSearchKey(String uuid) {
-        for (Resume r : resumes) {
-            int result = r.getUuid().compareTo(uuid);
-            if (result == 0) {
-                return resumes.indexOf(r);
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < resumes.size(); i++) {
+            if (resumes.get(i).getUuid().equals(uuid)) {
+                return i;
             }
         }
         return null;
     }
 
+    @Override
     protected boolean isExist(Object searchKey) {
         return searchKey != null;
     }
 
-    public void do(String uuid) {
-        int index = getSearchKey(uuid);
-        resumes.remove(index);
+    @Override
+    protected void doUpdate(Resume r, Object searchKey) {
+        resumes.set((Integer) searchKey, r);
     }
 
+    @Override
+    protected void doSave(Resume r, Object searchKey) {
+        resumes.add(r);
+    }
+
+    @Override
+    protected Resume doGet(Object searchKey) {
+        return resumes.get((Integer) searchKey);
+    }
+
+    @Override
+    protected void doDelete(Object searchKey) {
+        resumes.remove(((Integer) searchKey).intValue());
+    }
+
+    @Override
     public void clear() {
         resumes.clear();
     }

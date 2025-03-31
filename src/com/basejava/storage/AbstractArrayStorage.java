@@ -1,5 +1,6 @@
 package com.basejava.storage;
 
+import com.basejava.exception.StorageException;
 import com.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -23,29 +24,19 @@ public abstract class  AbstractArrayStorage extends AbstractStorage {
         size = 0;
     }
 
-    public void doUpdate(Resume r) {
-        int index = (int) getSearchKey(r.getUuid());
-        if (index < 0) {
-            System.out.println("Resume " + r.getUuid() + " not exist");
-        } else {
-            storage[index] = r;
-        }
-    }
 
-    public void doSave(Resume r) {
-        int index = (int) getSearchKey(r.getUuid());
-        if (index >= 0) {
-            System.out.println("Resume " + r.getUuid() + " already exist");
-        } else if (size >= STORAGE_LIMIT) {
-            System.out.println("Storage overflow");
+
+    public void doSave(Resume r, Object index) {
+        if (size == STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", r.getUuid());
         } else {
-            insertResume(r, index);
+            insertResume(r, (Integer) index);
             size++;
         }
     }
 
-    public Resume doGet(String uuid) {
-        return storage[(int) getSearchKey(uuid)];
+    public Resume doGet(Object index) {
+        return storage[(Integer) index];
     }
 
 
@@ -55,12 +46,17 @@ public abstract class  AbstractArrayStorage extends AbstractStorage {
         size--;
     }
 
-    protected boolean isExist(Integer key) {
-        return (Integer) key >= 0;
+    @Override
+    protected void doUpdate(Resume r, Object index) {
+        storage[(Integer) index] = r;
     }
 
-    public Resume[] getAllResumes() {
+    public Resume[] getAll() {
         return Arrays.copyOfRange(storage, 0, size);
+    }
+
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
     protected abstract void fillRemoved(int index);

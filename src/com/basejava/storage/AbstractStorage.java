@@ -4,36 +4,26 @@ import com.basejava.exception.ExistStorageException;
 import com.basejava.exception.NotExistStorageException;
 import com.basejava.model.Resume;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public abstract class AbstractStorage implements Storage {
-    List<Resume> resumes = new ArrayList<>();
 
     public final void update(Resume r) {
-        doUpdate(r);
+        Object searchKey = getExistedSearchKey(r.getUuid());
+        doUpdate(r, searchKey);
     }
 
     public final void save(Resume r) {
-        doSave(r);
+        Object searchKey = getNotExistedSearchKey(r.getUuid());
+        doSave(r, searchKey);
     }
 
     public final Resume get(String uuid) {
-        int index = (int) getSearchKey(uuid);
-        if (index < 0) {
-            System.out.println("Resume " + uuid + " not exist");
-            return null;
-        }
-        return doGet(uuid);
+        Object searchKey = getExistedSearchKey(uuid);
+        return doGet(searchKey);
     }
 
     public final void delete(String uuid) {
-        int index = (int) getSearchKey(uuid);
-        if (index < 0) {
-            System.out.println("Resume " + uuid + " not exist");
-        } else {
-            doDelete(uuid);
-        }
+        Object searchKey = getExistedSearchKey(uuid);
+        doDelete(searchKey);
     }
 
     private Object getExistedSearchKey(String uuid) {
@@ -54,11 +44,12 @@ public abstract class AbstractStorage implements Storage {
 
 
     protected abstract void doDelete(Object searchKey);
-    protected abstract void doUpdate(Resume r);
 
-    protected abstract void doSave(Resume r);
+    protected abstract void doUpdate(Resume r, Object searchKey);
 
-    protected abstract Resume doGet(String uuid);
+    protected abstract void doSave(Resume r, Object searchKey);
+
+    protected abstract Resume doGet(Object searchKey);
 
     protected abstract Object getSearchKey(String uuid);
 
