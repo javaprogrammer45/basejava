@@ -22,6 +22,11 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
+    protected List<Resume> doCopyAll() {
+        return new ArrayList<>(resumes);
+    }
+
+    @Override
     protected void doUpdate(Resume r, Object searchKey) {
         resumes.set((Integer) searchKey, r);
     }
@@ -44,11 +49,6 @@ public class ListStorage extends AbstractStorage {
     @Override
     public void clear() {
         resumes.clear();
-    }
-
-    @Override
-    public Resume[] getAll() {
-        return resumes.toArray(new Resume[resumes.size()]);
     }
 
     @Override

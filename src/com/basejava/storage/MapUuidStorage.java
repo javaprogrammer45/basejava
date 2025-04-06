@@ -2,18 +2,16 @@ package com.basejava.storage;
 
 import com.basejava.model.Resume;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class MapStorage extends AbstractStorage {
-    private Map<String, Resume> map = new HashMap<>();
+public class MapUuidStorage extends AbstractStorage {
+    private final Map<String, Resume> map = new HashMap<>();
 
     @Override
     protected String getSearchKey(String uuid) {
-        for (Map.Entry<String, Resume> item : map.entrySet()) {
-            if (uuid.hashCode() == item.getKey().hashCode()) {
-                return item.getKey();
-            }
+        if (uuid.hashCode() == map.get(uuid).hashCode()) {
+            return uuid;
         }
         return null;
     }
@@ -25,7 +23,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return searchKey != null;
+        return map.containsKey(searchKey);
     }
 
     @Override
@@ -44,13 +42,13 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    public void clear() {
-        map.clear();
+    public List<Resume> doCopyAll() {
+        return new ArrayList<>(map.values());
     }
 
     @Override
-    public Resume[] getAll() {
-        return map.values().toArray(new Resume[map.size()]);
+    public void clear() {
+        map.clear();
     }
 
     @Override
