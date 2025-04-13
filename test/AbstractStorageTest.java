@@ -8,7 +8,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestTemplate;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -34,7 +36,7 @@ class AbstractStorageTest {
         this.storage = storage;
     }
 
-    @Before
+    @BeforeAll
     public void setUp() throws Exception {
         storage.clear();
         storage.save(RESUME1);

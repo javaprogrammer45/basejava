@@ -2,7 +2,7 @@ import com.basejava.exception.StorageException;
 import com.basejava.model.Resume;
 import com.basejava.storage.AbstractArrayStorage;
 import com.basejava.storage.Storage;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
@@ -13,11 +13,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     @Test()
     public void saveOverflow() throws Exception {
         try {
-            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            for (int i = 3; i <= AbstractArrayStorage.STORAGE_LIMIT; i++) {
                 storage.save(new Resume());
             }
         } catch (StorageException e) {
-            Assert.fail();
+            Assertions.fail();
         }
         storage.save(new Resume());
     }

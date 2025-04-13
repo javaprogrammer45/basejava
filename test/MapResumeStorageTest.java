@@ -3,8 +3,8 @@ import com.basejava.storage.MapResumeStorage;
 
 import java.util.HashMap;
 
-public class MapResumeStorageTest {
+public class MapResumeStorageTest extends AbstractStorageTest {
     public MapResumeStorageTest() {
-        super();
+        super(new MapResumeStorage());
     }
 }

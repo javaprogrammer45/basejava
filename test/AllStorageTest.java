@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
         MapUuidStorageTest.class,
         MapResumeStorageTest.class
 })
-class AllStorageTest extends ArrayStorageTest{
+public class AllStorageTest {
 
 }
