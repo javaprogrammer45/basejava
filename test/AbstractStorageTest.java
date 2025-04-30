@@ -1,34 +1,26 @@
-import com.basejava.exception.ExistStorageException;
-import com.basejava.exception.NotExistStorageException;
-import com.basejava.exception.StorageException;
 import com.basejava.model.Resume;
-import com.basejava.storage.AbstractArrayStorage;
 import com.basejava.storage.Storage;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.TestTemplate;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     protected Storage storage;
 
     private final static String DUMMY = "dummy";
 
     private static final String UUID_1 = "uuid1";
-    private static final Resume RESUME1 = new Resume(UUID_1);
+    private static final Resume RESUME1 = new Resume(UUID_1, "Name1");
     private static final String UUID_2 = "uuid2";
-    private static final Resume RESUME2 = new Resume(UUID_2);
+    private static final Resume RESUME2 = new Resume(UUID_2, "Name2");
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME3 = new Resume(UUID_3);
+    private static final Resume RESUME3 = new Resume(UUID_3, "Name3");
 
     private static final Resume[] expected = new Resume[]{RESUME1, RESUME2, RESUME3};
 
@@ -36,7 +28,7 @@ class AbstractStorageTest {
         this.storage = storage;
     }
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() throws Exception {
         storage.clear();
         storage.save(RESUME1);
@@ -57,58 +49,56 @@ class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, "New Name");
         storage.update(newResume);
         assertTrue(newResume == storage.get(UUID_1));
     }
 
-    @Test(expected = NotExistStorageException.class)
-    public void updateNotExist() throws Exception {
+    @Test()
+    public void updateNotExist() {
         storage.get("dummy");
     }
 
     @Test
-    public void getAll() throws Exception {
-        Resume[] array = storage.getAllSorted().toArray(new Resume[0]);
-        assertEquals(3, array.length);
-        assertEquals(RESUME1, array[0]);
-        assertEquals(RESUME2, array[1]);
-        assertEquals(RESUME3, array[2]);
+    public void getAllSorted() {
+        List<Resume> list = storage.getAllSorted();
+        assertEquals(3, list.size());
+        assertEquals(list, Arrays.asList(RESUME1, RESUME2, RESUME3));
     }
 
     @Test
-    public void save() throws Exception {
+    public void save() {
         storage.save(RESUME3);
         assertSize(4);
         assertGet(RESUME3);
     }
 
-    @Test(expected = ExistStorageException.class)
-    public void saveExist() throws Exception {
+    @Test()
+    public void saveExist() {
         storage.save(RESUME1);
     }
 
-    @Test(expected = NotExistStorageException.class)
-    public void delete() throws Exception {
+    @Test()
+    public void delete() {
         storage.delete(UUID_1);
         assertSize(2);
         storage.get(UUID_1);
     }
 
-    @Test(expected = NotExistStorageException.class)
-    public void deleteNotExist() throws Exception {
+    @Test()
+    public void deleteNotExist() {
         storage.delete("dummy");
     }
 
     @Test
-    public void get() throws Exception {
+    public void get() {
         assertGet(RESUME1);
         assertGet(RESUME2);
         assertGet(RESUME3);
     }
 
-    @Test(expected = NotExistStorageException.class)
-    public void getNotExist() throws Exception {
+    @Test()
+    public void getNotExist() {
         storage.get("dummy");
     }
 

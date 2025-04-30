@@ -2,10 +2,7 @@ package com.basejava.storage;
 
 import com.basejava.model.Resume;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
     private final Map<String, Resume> map = new HashMap<>();
@@ -27,8 +24,8 @@ public class MapResumeStorage extends AbstractStorage {
     }
 
     @Override
-    protected void doSave(Resume r, Object searchKey) {
-        map.putIfAbsent(searchKey.toString(), r);
+    protected void doSave(Resume r, Object resume) {
+        map.put(r.getUuid(), r);
     }
 
     @Override
@@ -43,7 +40,7 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     public List<Resume> doCopyAll() {
-        return new ArrayList<>(map.values());
+        return Collections.emptyList();
     }
 
     @Override

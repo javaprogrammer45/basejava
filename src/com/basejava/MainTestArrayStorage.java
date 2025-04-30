@@ -3,6 +3,8 @@ package com.basejava;
 import com.basejava.model.Resume;
 import com.basejava.storage.ArrayStorage;
 
+
+
 /**
  * Test ArrayStorage
  */
@@ -10,9 +12,9 @@ public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume();
-        Resume r2 = new Resume();
-        Resume r3 = new Resume();
+        Resume r1 = new Resume("uuid1");
+        Resume r2 = new Resume("uuid2");
+        Resume r3 = new Resume("uuid3");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
